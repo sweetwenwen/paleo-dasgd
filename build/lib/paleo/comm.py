@@ -56,11 +56,11 @@ class TreeAllReduce(CommunicationBase):
         broadcasting."""
         one_link_time = self._time_in_communication(data_in_bytes)
         # return 2 * self.tree_height * one_link_time
-        # if self._num_nodes>8: return 2*(self.tree_height-3)*one_link_time+2*3/6.4*one_link_time
-        # if self._num_nodes<=8: return 2*self.tree_height*one_link_time/6.4
-        
-        if self._num_nodes>8: return 2*(self.tree_height-3)*one_link_time+2*0.029*one_link_time
-        if self._num_nodes<=8: return 2*self.tree_height*one_link_time*0.029
+        assert num_nodes>8 && tree_height>6
+        if num_nodes>8:
+            return 2*(tree_height-6)*one_link_time+2*6/6.4*one_link_time
+        if num_nodes<=8: 
+            return 2*tree_height*one_link_time/6.4
 
 class ButterflyAllReduce(CommunicationBase):
     def __init__(self, num_nodes, device, ppp_comm):
@@ -71,11 +71,11 @@ class ButterflyAllReduce(CommunicationBase):
         """It takes log2(n) steps to communicate."""
         one_link_time = self._time_in_communication(data_in_bytes)
         # return self.tree_height * one_link_time
-        # if self._num_nodes>8: return (self.tree_height-3)*one_link_time+3/6.4*one_link_time
-        # if self._num_nodes<=8: return self.tree_height*one_link_time/6.4
-        
-        if self._num_nodes>8: return (self.tree_height-3)*one_link_time+0.029*one_link_time
-        if self._num_nodes<=8: return self.tree_height*one_link_time*0.029
+        assert num_nodes>8 && tree_height>6
+        if num_nodes>8: 
+            return (tree_height-6)*one_link_time+6/6.4*one_link_time
+        if num_nodes<=8: 
+            return tree_height*one_link_time/6.4
 
 class ButterflyMixing(CommunicationBase):
     def __init__(self, num_nodes, device, ppp_comm):
